@@ -54,6 +54,10 @@ db.instrument.insert(${JSON.stringify(dbObject)});`;
   dbContentCollection.push(serializeDbObject);
 });
 
-fs.writeFileSync("output.js", dbContentCollection.join("\n"));
+const timestampPattern = /\"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\"/g;
+const output = dbContentCollection
+  .join("\n")
+  .replace(timestampPattern, `new Date("$1")`);
+fs.writeFileSync("output.js", output);
 
 exports.dbContentCollection = dbContentCollection;
